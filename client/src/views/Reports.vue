@@ -25,7 +25,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(q, index) in quarterlyData" :key="index" class="hover:bg-slate-50/70 transition-colors">
+              <tr v-for="(q, index) in quarterlyData" :key="index">
                 <td><strong>{{ q.quarter }}</strong></td>
                 <td>{{ q.total_orders }}</td>
                 <td>${{ formatNumber(q.total_revenue) }}</td>
@@ -46,21 +46,21 @@
         <div class="card-header">
           <h3 class="card-title">Monthly Revenue Trend</h3>
         </div>
-        <div class="px-6 py-8" style="min-height: 300px;">
-          <div class="flex items-end justify-around gap-2" style="height: 250px;">
+        <div class="px-6 py-8 min-h-[300px]">
+          <div class="flex items-end justify-around gap-2 h-[250px]">
             <div
               v-for="(month, index) in monthlyData"
               :key="index"
               class="flex flex-col items-center flex-1 max-w-[80px]"
             >
-              <div class="flex items-end w-full" style="height: 200px;">
+              <div class="flex items-end w-full h-[200px]">
                 <div
                   class="w-full bg-indigo-500 hover:bg-indigo-600 rounded-t transition-colors cursor-pointer"
                   :style="{ height: getBarHeight(month.revenue) + 'px' }"
                   :title="'$' + formatNumber(month.revenue)"
                 ></div>
               </div>
-              <div class="mt-6 text-xs text-slate-500 text-center whitespace-nowrap" style="transform: rotate(-45deg);">
+              <div class="mt-6 text-xs text-slate-500 text-center whitespace-nowrap -rotate-45">
                 {{ formatMonth(month.month) }}
               </div>
             </div>
@@ -85,7 +85,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(month, index) in monthlyData" :key="index" class="hover:bg-slate-50/70 transition-colors">
+              <tr v-for="(month, index) in monthlyData" :key="index">
                 <td><strong>{{ formatMonth(month.month) }}</strong></td>
                 <td>{{ month.order_count }}</td>
                 <td>${{ formatNumber(month.revenue) }}</td>

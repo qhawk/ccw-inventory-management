@@ -184,12 +184,12 @@ export default {
 
       // If change is within ±2%, consider it stable and show blue
       if (changePercent <= 2) {
-        return '#3b82f6' // Blue for stable
+        return '#6366f1' // Blue for stable
       }
 
       if (change > 0) return '#10b981' // Green for increasing
       if (change < 0) return '#ef4444' // Red for decreasing
-      return '#3b82f6' // Blue for no change
+      return '#6366f1' // Blue for no change
     }
 
     const translatePeriod = (period) => {

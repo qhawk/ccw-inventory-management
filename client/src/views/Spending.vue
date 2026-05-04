@@ -145,9 +145,8 @@
               </div>
               <div class="w-full h-2 bg-slate-100 rounded overflow-hidden">
                 <div
-                  class="h-full rounded transition-[width] duration-600"
-                  style="background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%)"
-                  :style="{ width: category.percentage + '%' }"
+                  class="h-full rounded transition-[width] duration-500"
+                  :style="{ width: category.percentage + '%', background: 'linear-gradient(90deg, #6366f1 0%, #4f46e5 100%)' }"
                 ></div>
               </div>
               <div class="flex justify-between text-xs font-medium">

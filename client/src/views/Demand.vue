@@ -94,7 +94,7 @@
                 <td>{{ forecast.current_demand }}</td>
                 <td><strong>{{ forecast.forecasted_demand }}</strong></td>
                 <td>
-                  <span :style="{ color: getChangeColor(forecast) }">
+                  <span :class="getChangeClass(forecast)">
                     {{ getChangePercent(forecast) }}%
                   </span>
                 </td>
@@ -178,18 +178,14 @@ export default {
       return change > 0 ? `+${change}` : change
     }
 
-    const getChangeColor = (forecast) => {
+    const getChangeClass = (forecast) => {
       const change = forecast.forecasted_demand - forecast.current_demand
       const changePercent = Math.abs((change / forecast.current_demand) * 100)
 
-      // If change is within ±2%, consider it stable and show blue
-      if (changePercent <= 2) {
-        return '#6366f1' // Blue for stable
-      }
-
-      if (change > 0) return '#10b981' // Green for increasing
-      if (change < 0) return '#ef4444' // Red for decreasing
-      return '#6366f1' // Blue for no change
+      if (changePercent <= 2) return 'text-indigo-600 font-semibold'
+      if (change > 0) return 'text-emerald-600 font-semibold'
+      if (change < 0) return 'text-red-600 font-semibold'
+      return 'text-indigo-600 font-semibold'
     }
 
     const translatePeriod = (period) => {

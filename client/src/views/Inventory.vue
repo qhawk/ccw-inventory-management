@@ -11,20 +11,21 @@
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">{{ t('inventory.stockLevels') }} ({{ filteredItems.length }} {{ t('inventory.skus') }})</h3>
-          <div class="search-box">
-            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <div class="relative flex items-center">
+            <svg class="absolute left-3 w-4 h-4 text-slate-400 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
             </svg>
             <input
               v-model="searchQuery"
               type="text"
               :placeholder="t('inventory.searchPlaceholder')"
-              class="search-input"
+              class="w-full pl-9 pr-9 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors"
             />
             <button
               v-if="searchQuery"
               @click="searchQuery = ''"
-              class="clear-search"
+              class="absolute right-2 p-1 rounded text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors cursor-pointer border-0 bg-transparent"
+              type="button"
               :title="t('inventory.clearSearch')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -52,7 +53,7 @@
               <tr
                 v-for="item in filteredItems"
                 :key="item.id"
-                class="clickable-row"
+                class="cursor-pointer hover:bg-slate-50/70 transition-colors"
                 @click="showItemDetail(item)"
               >
                 <td><strong>{{ item.sku }}</strong></td>
@@ -223,117 +224,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.page-header {
-  margin-bottom: 1.5rem;
-}
-
-.page-header h2 {
-  margin-bottom: 0.25rem;
-}
-
-.page-header p {
-  color: #64748b;
-  font-size: 0.875rem;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.card-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0;
-}
-
-.search-box {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-width: 300px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 0.75rem;
-  width: 18px;
-  height: 18px;
-  color: #94a3b8;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.5rem 2.5rem 0.5rem 2.5rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: #0f172a;
-  background: #f8fafc;
-  transition: all 0.2s;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-input::placeholder {
-  color: #94a3b8;
-}
-
-.clear-search {
-  position: absolute;
-  right: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  color: #94a3b8;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.clear-search:hover {
-  background: #e2e8f0;
-  color: #64748b;
-}
-
-.clear-search svg {
-  width: 18px;
-  height: 18px;
-}
-
-.loading,
-.error {
-  padding: 2rem;
-  text-align: center;
-  color: #64748b;
-}
-
-.error {
-  color: #ef4444;
-}
-
-.clickable-row {
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.clickable-row:hover {
-  background: #eff6ff !important;
-}
-</style>

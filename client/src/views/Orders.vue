@@ -50,13 +50,13 @@
                 <td class="col-customer">{{ translateCustomerName(order.customer) }}</td>
                 <td class="col-items">
                   <details class="items-details">
-                    <summary class="items-summary">
+                    <summary class="cursor-pointer text-indigo-600 font-medium list-none select-none hover:text-indigo-700 text-sm">
                       {{ t('orders.itemsCount', { count: order.items.length }) }}
                     </summary>
-                    <div class="items-dropdown">
-                      <div v-for="(item, idx) in order.items" :key="idx" class="item-entry">
-                        <span class="item-name">{{ translateProductName(item.name) }}</span>
-                        <span class="item-meta">{{ t('orders.quantity') }}: {{ item.quantity }} @ {{ currencySymbol }}{{ item.unit_price }}</span>
+                    <div class="absolute top-full left-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-3 z-10 min-w-[300px] max-w-[400px]">
+                      <div v-for="(item, idx) in order.items" :key="idx" class="flex flex-col gap-1 py-2 px-2 border-b border-slate-50 last:border-b-0">
+                        <span class="text-sm font-medium text-slate-900">{{ translateProductName(item.name) }}</span>
+                        <span class="text-xs text-slate-500">{{ t('orders.quantity') }}: {{ item.quantity }} @ {{ currencySymbol }}{{ item.unit_price }}</span>
                       </div>
                     </div>
                   </details>
@@ -203,77 +203,21 @@ export default {
   width: 120px;
 }
 
-/* Items details styling */
+/* Items details positioning */
 .items-details {
   position: relative;
 }
 
-.items-summary {
-  cursor: pointer;
-  color: #3b82f6;
-  font-weight: 500;
-  list-style: none;
-  user-select: none;
-  display: inline-block;
-}
-
-.items-summary::-webkit-details-marker {
-  display: none;
-}
-
-.items-summary::before {
+/* Chevron pseudo-element — cannot be handled by Tailwind without a plugin */
+summary::before {
   content: '▶';
   display: inline-block;
   margin-right: 0.375rem;
-  font-size: 0.75rem;
-  transition: transform 0.2s;
+  font-size: 0.625rem;
+  transition: transform 0.15s ease;
 }
 
-.items-details[open] .items-summary::before {
+details[open] summary::before {
   transform: rotate(90deg);
-}
-
-.items-summary:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-/* Dropdown container */
-.items-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 0.5rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 0.75rem;
-  z-index: 10;
-  min-width: 300px;
-  max-width: 400px;
-}
-
-.item-entry {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.item-entry:last-child {
-  border-bottom: none;
-}
-
-.item-name {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #0f172a;
-}
-
-.item-meta {
-  font-size: 0.813rem;
-  color: #64748b;
 }
 </style>

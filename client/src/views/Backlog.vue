@@ -1,5 +1,5 @@
 <template>
-  <div class="backlog">
+  <div>
     <div class="page-header">
       <h2>Backlog Management</h2>
       <p>Track and resolve inventory shortages</p>
@@ -8,22 +8,22 @@
     <div v-if="loading" class="loading">Loading backlog...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
-      <div class="stats-grid">
-        <div class="stat-card danger">
-          <div class="stat-label">High Priority</div>
-          <div class="stat-value">{{ getBacklogByPriority('high').length }}</div>
+      <div class="stats-grid mb-6">
+        <div class="stat-card border-l-4 border-red-400">
+          <div class="text-sm text-slate-500 mb-1">High Priority</div>
+          <div class="text-3xl font-bold text-slate-900">{{ getBacklogByPriority('high').length }}</div>
         </div>
-        <div class="stat-card warning">
-          <div class="stat-label">Medium Priority</div>
-          <div class="stat-value">{{ getBacklogByPriority('medium').length }}</div>
+        <div class="stat-card border-l-4 border-amber-400">
+          <div class="text-sm text-slate-500 mb-1">Medium Priority</div>
+          <div class="text-3xl font-bold text-slate-900">{{ getBacklogByPriority('medium').length }}</div>
         </div>
-        <div class="stat-card info">
-          <div class="stat-label">Low Priority</div>
-          <div class="stat-value">{{ getBacklogByPriority('low').length }}</div>
+        <div class="stat-card border-l-4 border-indigo-400">
+          <div class="text-sm text-slate-500 mb-1">Low Priority</div>
+          <div class="text-3xl font-bold text-slate-900">{{ getBacklogByPriority('low').length }}</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Total Backlog Items</div>
-          <div class="stat-value">{{ backlogItems.length }}</div>
+          <div class="text-sm text-slate-500 mb-1">Total Backlog Items</div>
+          <div class="text-3xl font-bold text-slate-900">{{ backlogItems.length }}</div>
         </div>
       </div>
 
@@ -31,9 +31,9 @@
         <div class="card-header">
           <h3 class="card-title">Backlog Items</h3>
         </div>
-        <div v-if="backlogItems.length === 0" style="padding: 3rem; text-align: center;">
-          <p style="font-size: 1.125rem; color: #10b981; font-weight: 600;">
-            ✓ No backlog items - all orders can be fulfilled!
+        <div v-if="backlogItems.length === 0" class="py-12 text-center">
+          <p class="text-base text-emerald-600 font-semibold">
+            No backlog items — all orders can be fulfilled!
           </p>
         </div>
         <div v-else class="table-container">
@@ -63,7 +63,7 @@
                   </span>
                 </td>
                 <td>
-                  <span :style="{ color: item.days_delayed > 7 ? '#ef4444' : '#f59e0b' }">
+                  <span :class="item.days_delayed > 7 ? 'text-red-500 font-semibold' : 'text-amber-500 font-semibold'">
                     {{ item.days_delayed }} days
                   </span>
                 </td>

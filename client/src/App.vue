@@ -9,43 +9,43 @@
         <nav class="flex items-center gap-1 flex-1">
           <router-link
             to="/"
-            class="relative px-3 py-2 text-sm font-medium rounded-lg transition-colors"
-            :class="$route.path === '/' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'"
+            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+            exact-active-class="!text-indigo-600 !bg-indigo-50"
           >
             {{ t('nav.overview') }}
           </router-link>
           <router-link
             to="/inventory"
-            class="relative px-3 py-2 text-sm font-medium rounded-lg transition-colors"
-            :class="$route.path === '/inventory' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'"
+            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+            exact-active-class="!text-indigo-600 !bg-indigo-50"
           >
             {{ t('nav.inventory') }}
           </router-link>
           <router-link
             to="/orders"
-            class="relative px-3 py-2 text-sm font-medium rounded-lg transition-colors"
-            :class="$route.path === '/orders' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'"
+            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+            exact-active-class="!text-indigo-600 !bg-indigo-50"
           >
             {{ t('nav.orders') }}
           </router-link>
           <router-link
             to="/spending"
-            class="relative px-3 py-2 text-sm font-medium rounded-lg transition-colors"
-            :class="$route.path === '/spending' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'"
+            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+            exact-active-class="!text-indigo-600 !bg-indigo-50"
           >
             {{ t('nav.finance') }}
           </router-link>
           <router-link
             to="/demand"
-            class="relative px-3 py-2 text-sm font-medium rounded-lg transition-colors"
-            :class="$route.path === '/demand' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'"
+            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+            exact-active-class="!text-indigo-600 !bg-indigo-50"
           >
             {{ t('nav.demandForecast') }}
           </router-link>
           <router-link
             to="/reports"
-            class="relative px-3 py-2 text-sm font-medium rounded-lg transition-colors"
-            :class="$route.path === '/reports' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'"
+            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+            exact-active-class="!text-indigo-600 !bg-indigo-50"
           >
             Reports
           </router-link>

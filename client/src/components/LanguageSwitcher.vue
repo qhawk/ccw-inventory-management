@@ -1,6 +1,7 @@
 <template>
   <div class="relative">
     <button
+      type="button"
       class="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors cursor-pointer"
       @click="toggleDropdown"
       @blur="handleBlur"
@@ -26,14 +27,23 @@
       </svg>
     </button>
 
-    <div v-if="isDropdownOpen" class="absolute top-[calc(100%+0.5rem)] right-0 min-w-[160px] bg-white border border-slate-200 rounded-xl shadow-xl z-[1000] overflow-hidden py-1">
-      <button
-        v-for="locale in availableLocales"
-        :key="locale"
-        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors text-left cursor-pointer border-0 bg-transparent font-[inherit]"
-        :class="currentLocale === locale ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:bg-slate-50'"
-        @mousedown.prevent="selectLanguage(locale)"
-      >
+    <Transition
+      enter-active-class="transition duration-100 ease-out origin-top-right"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition duration-75 ease-in origin-top-right"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div v-if="isDropdownOpen" class="absolute top-[calc(100%+0.5rem)] right-0 min-w-[160px] bg-white border border-slate-200 rounded-xl shadow-xl z-[1000] overflow-hidden py-1">
+        <button
+          v-for="locale in availableLocales"
+          :key="locale"
+          type="button"
+          class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors text-left cursor-pointer border-0 bg-transparent font-[inherit]"
+          :class="currentLocale === locale ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:bg-slate-50'"
+          @mousedown.prevent="selectLanguage(locale)"
+        >
         <span>{{ getLanguageName(locale) }}</span>
         <svg
           v-if="currentLocale === locale"
@@ -43,8 +53,9 @@
         >
           <path d="M4 9L7.5 12.5L14 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-      </button>
-    </div>
+        </button>
+      </div>
+    </Transition>
   </div>
 </template>
 

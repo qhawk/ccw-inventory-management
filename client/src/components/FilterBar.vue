@@ -56,6 +56,7 @@
       </div>
 
       <button
+        type="button"
         class="flex items-center justify-center p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-white cursor-pointer"
         @click="resetFilters"
         :disabled="!hasActiveFilters"

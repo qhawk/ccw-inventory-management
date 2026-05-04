@@ -1,6 +1,7 @@
 <template>
   <div class="relative">
     <button
+      type="button"
       class="flex items-center gap-2.5 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors cursor-pointer"
       @click="toggleDropdown"
       @blur="handleBlur"
@@ -16,8 +17,16 @@
       </span>
     </button>
 
-    <div v-if="isDropdownOpen" class="absolute top-[calc(100%+0.5rem)] right-0 min-w-[280px] bg-white border border-slate-200 rounded-xl shadow-xl z-[1000] overflow-hidden">
-      <div class="px-4 py-3 flex gap-3.5 items-center bg-slate-50 border-b border-slate-100">
+    <Transition
+      enter-active-class="transition duration-100 ease-out origin-top-right"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition duration-75 ease-in origin-top-right"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div v-if="isDropdownOpen" class="absolute top-[calc(100%+0.5rem)] right-0 min-w-[280px] bg-white border border-slate-200 rounded-xl shadow-xl z-[1000] overflow-hidden">
+        <div class="px-4 py-3 flex gap-3.5 items-center bg-slate-50 border-b border-slate-100">
         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white flex items-center justify-center text-base font-bold shrink-0">
           {{ getInitials(currentUser.name) }}
         </div>
@@ -30,6 +39,7 @@
       <div class="border-t border-slate-100"></div>
 
       <button
+        type="button"
         class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors text-left bg-transparent border-0 cursor-pointer font-[inherit]"
         @mousedown.prevent="showProfileDetails"
       >
@@ -41,6 +51,7 @@
       </button>
 
       <button
+        type="button"
         class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors text-left bg-transparent border-0 cursor-pointer font-[inherit]"
         @mousedown.prevent="showTasks"
       >
@@ -55,6 +66,7 @@
       <div class="border-t border-slate-100"></div>
 
       <button
+        type="button"
         class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors text-left bg-transparent border-0 cursor-pointer font-[inherit]"
         @mousedown.prevent="handleLogout"
       >
@@ -64,7 +76,8 @@
         </svg>
         {{ t('profile.logout') }}
       </button>
-    </div>
+      </div>
+    </Transition>
   </div>
 </template>
 

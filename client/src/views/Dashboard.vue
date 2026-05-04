@@ -153,8 +153,8 @@
                 <div class="w-[120px] min-w-[120px] text-sm font-semibold text-slate-600 flex-shrink-0">{{ translateCategory(cat.name) }}</div>
                 <div class="w-full bg-slate-100 rounded-lg h-8 overflow-hidden">
                   <div
-                    class="h-full flex items-center justify-end pr-3 text-white text-xs font-medium transition-all duration-500 rounded-lg"
-                    :style="{ width: (cat.value / maxCategoryValue * 100) + '%', background: '#6366f1' }"
+                    class="h-full flex items-center justify-end pr-3 text-white text-xs font-medium transition-all duration-500 rounded-lg bg-indigo-500"
+                    :style="{ width: (cat.value / maxCategoryValue * 100) + '%' }"
                   >
                     <span>{{ selectedCurrency === 'JPY' ? formatCurrency(cat.value, selectedCurrency) : `$${(cat.value / 1000).toFixed(1)}K` }}</span>
                   </div>

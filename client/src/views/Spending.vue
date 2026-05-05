@@ -1,5 +1,5 @@
 <template>
-  <div class="spending">
+  <div class="bg-slate-50 min-h-full p-6">
     <div class="page-header">
       <h2>{{ t('finance.title') }}</h2>
       <p>{{ t('finance.description') }}</p>
@@ -9,57 +9,71 @@
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
       <!-- Revenue & Financial KPIs -->
-      <div class="stats-grid-finance">
-        <div class="stat-card revenue-card">
-          <div class="stat-label">{{ t('finance.totalRevenue') }}</div>
-          <div class="stat-value">{{ formatCurrency(revenueMetrics.totalRevenue) }}</div>
-          <div class="stat-change positive">
-            <span class="change-icon">↑</span>
+      <div class="stats-grid mb-8">
+        <div class="stat-card border-l-4 border-indigo-500">
+          <div class="text-sm font-medium text-slate-500 mb-1">{{ t('finance.totalRevenue') }}</div>
+          <div class="text-2xl font-bold text-slate-900">{{ formatCurrency(revenueMetrics.totalRevenue) }}</div>
+          <div class="mt-3 text-sm font-semibold text-emerald-600 flex items-center gap-1">
+            <span class="font-bold text-base">↑</span>
             {{ t('finance.fromOrders', { count: revenueMetrics.orderCount }) }}
           </div>
         </div>
-        <div class="stat-card cost-card">
-          <div class="stat-label">{{ t('finance.totalCosts') }}</div>
-          <div class="stat-value">{{ formatCurrency(totalCosts) }}</div>
-          <div class="stat-meta">{{ t('finance.costBreakdown') }}</div>
+        <div class="stat-card border-l-4 border-red-500">
+          <div class="text-sm font-medium text-slate-500 mb-1">{{ t('finance.totalCosts') }}</div>
+          <div class="text-2xl font-bold text-slate-900">{{ formatCurrency(totalCosts) }}</div>
+          <div class="mt-2 text-xs text-slate-500">{{ t('finance.costBreakdown') }}</div>
         </div>
-        <div class="stat-card profit-card">
-          <div class="stat-label">{{ t('finance.netProfit') }}</div>
-          <div class="stat-value">{{ formatCurrency(netProfit) }}</div>
-          <div class="stat-meta">{{ profitMargin }}% {{ t('finance.margin') }}</div>
+        <div class="stat-card border-l-4 border-emerald-500">
+          <div class="text-sm font-medium text-slate-500 mb-1">{{ t('finance.netProfit') }}</div>
+          <div class="text-2xl font-bold text-slate-900">{{ formatCurrency(netProfit) }}</div>
+          <div class="mt-2 text-xs text-slate-500">{{ profitMargin }}% {{ t('finance.margin') }}</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">{{ t('finance.avgOrderValue') }}</div>
-          <div class="stat-value">{{ formatCurrency(revenueMetrics.avgOrderValue) }}</div>
-          <div class="stat-meta">{{ t('finance.perOrderRevenue') }}</div>
+        <div class="stat-card border-l-4 border-slate-900">
+          <div class="text-sm font-medium text-slate-500 mb-1">{{ t('finance.avgOrderValue') }}</div>
+          <div class="text-2xl font-bold text-slate-900">{{ formatCurrency(revenueMetrics.avgOrderValue) }}</div>
+          <div class="mt-2 text-xs text-slate-500">{{ t('finance.perOrderRevenue') }}</div>
         </div>
       </div>
 
       <!-- Monthly Revenue vs Cost Chart -->
-      <div class="card chart-card">
+      <div class="card mb-7">
         <div class="card-header">
           <h3 class="card-title">{{ t('finance.revenueVsCosts.title') }}</h3>
-          <div class="chart-legend">
-            <span class="legend-item"><span class="legend-dot revenue-color"></span>{{ t('finance.revenueVsCosts.revenue') }}</span>
-            <span class="legend-item"><span class="legend-dot cost-color"></span>{{ t('finance.revenueVsCosts.costs') }}</span>
+          <div class="flex gap-6 text-sm">
+            <span class="flex items-center gap-2 text-slate-500">
+              <span class="inline-block w-3 h-3 rounded-sm bg-slate-900"></span>
+              {{ t('finance.revenueVsCosts.revenue') }}
+            </span>
+            <span class="flex items-center gap-2 text-slate-500">
+              <span class="inline-block w-3 h-3 rounded-sm bg-red-500"></span>
+              {{ t('finance.revenueVsCosts.costs') }}
+            </span>
           </div>
         </div>
-        <div class="chart-container">
-          <div class="bar-chart">
-            <div class="y-axis">
+        <div class="px-6 py-6">
+          <div class="flex gap-6 h-[350px]">
+            <div class="flex flex-col justify-between pr-4 text-xs text-slate-400 border-r border-slate-200">
               <span>{{ currencySymbol }}{{ maxRevenueValue }}K</span>
               <span>{{ currencySymbol }}{{ Math.round(maxRevenueValue * 0.75) }}K</span>
               <span>{{ currencySymbol }}{{ Math.round(maxRevenueValue * 0.5) }}K</span>
               <span>{{ currencySymbol }}{{ Math.round(maxRevenueValue * 0.25) }}K</span>
               <span>{{ currencySymbol }}0</span>
             </div>
-            <div class="chart-area">
-              <div v-for="month in monthlyRevenue" :key="month.month" class="bar-group-revenue">
-                <div class="revenue-bars">
-                  <div class="revenue-bar" :style="{ height: getRevenueBarHeight(month.revenue) + '%' }" :title="`Revenue: ${currencySymbol}${month.revenue.toLocaleString()}`"></div>
-                  <div class="cost-bar" :style="{ height: getRevenueBarHeight(month.costs) + '%' }" :title="`Costs: ${currencySymbol}${month.costs.toLocaleString()}`"></div>
+            <div class="flex-1 flex items-end justify-around gap-2">
+              <div v-for="month in monthlyRevenue" :key="month.month" class="flex flex-col items-center flex-1 h-full">
+                <div class="w-full max-w-[80px] flex gap-1.5 justify-center items-end h-full pb-8">
+                  <div
+                    class="w-1/2 max-w-[30px] rounded-t-md bg-slate-900 transition-all duration-300 cursor-pointer min-h-[4px] hover:opacity-80"
+                    :style="{ height: getRevenueBarHeight(month.revenue) + '%' }"
+                    :title="`Revenue: ${currencySymbol}${month.revenue.toLocaleString()}`"
+                  ></div>
+                  <div
+                    class="w-1/2 max-w-[30px] rounded-t-md bg-red-500 transition-all duration-300 cursor-pointer min-h-[4px] hover:opacity-80"
+                    :style="{ height: getRevenueBarHeight(month.costs) + '%' }"
+                    :title="`Costs: ${currencySymbol}${month.costs.toLocaleString()}`"
+                  ></div>
                 </div>
-                <span class="bar-label">{{ translateMonth(month.month) }}</span>
+                <span class="mt-2 text-xs font-semibold text-slate-500">{{ translateMonth(month.month) }}</span>
               </div>
             </div>
           </div>
@@ -67,19 +81,31 @@
       </div>
 
       <!-- Monthly Cost Flow Chart -->
-      <div class="card chart-card">
+      <div class="card mb-7">
         <div class="card-header">
           <h3 class="card-title">{{ t('finance.monthlyCostFlow.title') }}</h3>
-          <div class="chart-legend">
-            <span class="legend-item"><span class="legend-dot procurement"></span>{{ t('finance.monthlyCostFlow.procurement') }}</span>
-            <span class="legend-item"><span class="legend-dot operational"></span>{{ t('finance.monthlyCostFlow.operational') }}</span>
-            <span class="legend-item"><span class="legend-dot labor"></span>{{ t('finance.monthlyCostFlow.labor') }}</span>
-            <span class="legend-item"><span class="legend-dot overhead"></span>{{ t('finance.monthlyCostFlow.overhead') }}</span>
+          <div class="flex gap-6 text-sm">
+            <span class="flex items-center gap-2 text-slate-500">
+              <span class="inline-block w-3 h-3 rounded-sm bg-indigo-500"></span>
+              {{ t('finance.monthlyCostFlow.procurement') }}
+            </span>
+            <span class="flex items-center gap-2 text-slate-500">
+              <span class="inline-block w-3 h-3 rounded-sm bg-violet-500"></span>
+              {{ t('finance.monthlyCostFlow.operational') }}
+            </span>
+            <span class="flex items-center gap-2 text-slate-500">
+              <span class="inline-block w-3 h-3 rounded-sm bg-emerald-500"></span>
+              {{ t('finance.monthlyCostFlow.labor') }}
+            </span>
+            <span class="flex items-center gap-2 text-slate-500">
+              <span class="inline-block w-3 h-3 rounded-sm bg-amber-500"></span>
+              {{ t('finance.monthlyCostFlow.overhead') }}
+            </span>
           </div>
         </div>
-        <div class="chart-container">
-          <div class="bar-chart">
-            <div class="y-axis">
+        <div class="px-6 py-6">
+          <div class="flex gap-6 h-[350px]">
+            <div class="flex flex-col justify-between pr-4 text-xs text-slate-400 border-r border-slate-200">
               <span>{{ currencySymbol }}25K</span>
               <span>{{ currencySymbol }}20K</span>
               <span>{{ currencySymbol }}15K</span>
@@ -87,39 +113,48 @@
               <span>{{ currencySymbol }}5K</span>
               <span>{{ currencySymbol }}0</span>
             </div>
-            <div class="chart-area">
-              <div v-for="month in monthlySpending" :key="month.month" class="bar-group">
-                <div class="stacked-bar" @click="showCostDetail(month)">
-                  <div class="bar-segment procurement" :style="{ height: getBarHeight(month.procurement) + '%' }" :title="`Procurement: ${currencySymbol}${month.procurement.toLocaleString()}`"></div>
-                  <div class="bar-segment operational" :style="{ height: getBarHeight(month.operational) + '%' }" :title="`Operational: ${currencySymbol}${month.operational.toLocaleString()}`"></div>
-                  <div class="bar-segment labor" :style="{ height: getBarHeight(month.labor) + '%' }" :title="`Labor: ${currencySymbol}${month.labor.toLocaleString()}`"></div>
-                  <div class="bar-segment overhead" :style="{ height: getBarHeight(month.overhead) + '%' }" :title="`Overhead: ${currencySymbol}${month.overhead.toLocaleString()}`"></div>
+            <div class="flex-1 flex items-end justify-around gap-2">
+              <div v-for="month in monthlySpending" :key="month.month" class="flex flex-col items-center flex-1 h-full">
+                <div
+                  class="w-full max-w-[60px] flex flex-col-reverse items-stretch h-full pb-8 cursor-pointer transition-opacity duration-200 hover:opacity-85"
+                  @click="showCostDetail(month)"
+                >
+                  <div class="bar-segment-procurement w-full transition-all duration-300 cursor-pointer block rounded-b-md" :style="{ height: getBarHeight(month.procurement) + '%' }" :title="`Procurement: ${currencySymbol}${month.procurement.toLocaleString()}`"></div>
+                  <div class="bar-segment-operational w-full transition-all duration-300 cursor-pointer block" :style="{ height: getBarHeight(month.operational) + '%' }" :title="`Operational: ${currencySymbol}${month.operational.toLocaleString()}`"></div>
+                  <div class="bar-segment-labor w-full transition-all duration-300 cursor-pointer block" :style="{ height: getBarHeight(month.labor) + '%' }" :title="`Labor: ${currencySymbol}${month.labor.toLocaleString()}`"></div>
+                  <div class="bar-segment-overhead w-full transition-all duration-300 cursor-pointer block rounded-t-md" :style="{ height: getBarHeight(month.overhead) + '%' }" :title="`Overhead: ${currencySymbol}${month.overhead.toLocaleString()}`"></div>
                 </div>
-                <span class="bar-label">{{ translateMonth(month.month) }}</span>
+                <span class="mt-2 text-xs font-semibold text-slate-500">{{ translateMonth(month.month) }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="two-column-grid">
+      <div class="grid gap-7" style="grid-template-columns: repeat(auto-fit, minmax(450px, 1fr))">
         <!-- Category Spending Breakdown -->
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">{{ t('finance.categorySpending.title') }}</h3>
           </div>
-          <div class="category-list">
-            <div v-for="category in categorySpending" :key="category.category" class="category-item">
-              <div class="category-info">
-                <div class="category-name">{{ translateCategory(category.category) }}</div>
-                <div class="category-amount">{{ currencySymbol }}{{ category.amount.toLocaleString() }}</div>
+          <div class="flex flex-col gap-6 px-6 py-5">
+            <div v-for="category in categorySpending" :key="category.category" class="flex flex-col gap-2">
+              <div class="flex justify-between items-center">
+                <div class="font-semibold text-slate-900">{{ translateCategory(category.category) }}</div>
+                <div class="font-bold text-indigo-600 text-lg">{{ currencySymbol }}{{ category.amount.toLocaleString() }}</div>
               </div>
-              <div class="category-bar-container">
-                <div class="category-bar" :style="{ width: category.percentage + '%' }"></div>
+              <div class="w-full h-2 bg-slate-100 rounded overflow-hidden">
+                <div
+                  class="h-full rounded transition-[width] duration-500"
+                  :style="{ width: category.percentage + '%', background: 'linear-gradient(90deg, #6366f1 0%, #4f46e5 100%)' }"
+                ></div>
               </div>
-              <div class="category-meta">
-                <span class="percentage">{{ category.percentage }}% {{ t('finance.categorySpending.ofTotal') }}</span>
-                <span class="change" :class="{ positive: category.change > 0, negative: category.change < 0 }">
+              <div class="flex justify-between text-xs font-medium">
+                <span class="text-slate-500">{{ category.percentage }}% {{ t('finance.categorySpending.ofTotal') }}</span>
+                <span
+                  class="font-semibold"
+                  :class="category.change > 0 ? 'text-emerald-600' : category.change < 0 ? 'text-red-600' : 'text-slate-500'"
+                >
                   {{ category.change > 0 ? '+' : '' }}{{ category.change }}%
                 </span>
               </div>
@@ -128,33 +163,33 @@
         </div>
 
         <!-- Recent Transactions -->
-        <div class="card transactions-card">
+        <div class="card flex flex-col">
           <div class="card-header">
             <h3 class="card-title">{{ t('finance.transactions.title') }}</h3>
           </div>
-          <div class="transactions-table-container">
-            <table class="transactions-table">
-              <thead>
+          <div class="overflow-y-auto max-h-[400px]">
+            <table class="w-full border-collapse">
+              <thead class="sticky top-0 bg-slate-50 z-10">
                 <tr>
-                  <th>{{ t('finance.transactions.id') }}</th>
-                  <th>{{ t('finance.transactions.description') }}</th>
-                  <th>{{ t('finance.transactions.vendor') }}</th>
-                  <th>{{ t('finance.transactions.date') }}</th>
-                  <th class="text-right">{{ t('finance.transactions.amount') }}</th>
+                  <th class="text-left px-3 py-2.5 font-semibold text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">{{ t('finance.transactions.id') }}</th>
+                  <th class="text-left px-3 py-2.5 font-semibold text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">{{ t('finance.transactions.description') }}</th>
+                  <th class="text-left px-3 py-2.5 font-semibold text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">{{ t('finance.transactions.vendor') }}</th>
+                  <th class="text-left px-3 py-2.5 font-semibold text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">{{ t('finance.transactions.date') }}</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">{{ t('finance.transactions.amount') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="transaction in recentTransactions"
                   :key="transaction.id"
-                  class="clickable-row"
+                  class="cursor-pointer transition-colors hover:bg-slate-50/70 border-b border-slate-50"
                   @click="handleTransactionClick(transaction)"
                 >
-                  <td class="transaction-id">{{ transaction.id.toString().padStart(3, '0') }}</td>
-                  <td class="transaction-description">{{ transaction.description }}</td>
-                  <td class="transaction-vendor">{{ transaction.vendor }}</td>
-                  <td class="transaction-date">{{ formatDateShort(transaction.date) }}</td>
-                  <td class="transaction-amount text-right">{{ currencySymbol }}{{ transaction.amount.toLocaleString() }}</td>
+                  <td class="px-3 py-3 text-slate-500 font-medium font-mono text-xs">{{ transaction.id.toString().padStart(3, '0') }}</td>
+                  <td class="px-3 py-3 text-sm text-slate-900 font-medium">{{ transaction.description }}</td>
+                  <td class="px-3 py-3 text-sm text-slate-500">{{ transaction.vendor }}</td>
+                  <td class="px-3 py-3 text-xs text-slate-500">{{ formatDateShort(transaction.date) }}</td>
+                  <td class="px-3 py-3 text-sm font-bold text-slate-900 text-right">{{ currencySymbol }}{{ transaction.amount.toLocaleString() }}</td>
                 </tr>
               </tbody>
             </table>
@@ -492,361 +527,10 @@ export default {
 </script>
 
 <style scoped>
-.stat-change {
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.stat-change.positive {
-  color: #059669;
-}
-
-.stat-change.negative {
-  color: #dc2626;
-}
-
-.change-icon {
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.chart-card {
-  margin-bottom: 1.75rem;
-}
-
-.chart-legend {
-  display: flex;
-  gap: 1.5rem;
-  font-size: 0.875rem;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #64748b;
-}
-
-.legend-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-}
-
-.legend-dot.procurement { background: #3b82f6; }
-.legend-dot.operational { background: #8b5cf6; }
-.legend-dot.labor { background: #10b981; }
-.legend-dot.overhead { background: #f59e0b; }
-.legend-dot.revenue-color { background: #0f172a; }
-.legend-dot.cost-color { background: #ef4444; }
-
-.stats-grid-finance {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.revenue-card {
-  border-left: 4px solid #0f172a;
-}
-
-.cost-card {
-  border-left: 4px solid #ef4444;
-}
-
-.profit-card {
-  border-left: 4px solid #3b82f6;
-}
-
-.stat-meta {
-  margin-top: 0.5rem;
-  font-size: 0.813rem;
-  color: #64748b;
-}
-
-.bar-group-revenue {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  height: 100%;
-}
-
-.revenue-bars {
-  width: 100%;
-  max-width: 80px;
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  align-items: flex-end;
-  height: 100%;
-  padding-bottom: 2rem;
-}
-
-.revenue-bar, .cost-bar {
-  width: 50%;
-  max-width: 30px;
-  border-radius: 6px 6px 0 0;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  min-height: 4px;
-}
-
-.revenue-bar {
-  background: #0f172a;
-}
-
-.cost-bar {
-  background: #ef4444;
-}
-
-.revenue-bar:hover, .cost-bar:hover {
-  opacity: 0.8;
-  transform: scaleY(1.05);
-}
-
-.chart-container {
-  padding: 1.5rem 0;
-}
-
-.bar-chart {
-  display: flex;
-  gap: 1.5rem;
-  height: 350px;
-}
-
-.y-axis {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-right: 1rem;
-  font-size: 0.75rem;
-  color: #94a3b8;
-  border-right: 1px solid #e2e8f0;
-}
-
-.chart-area {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  gap: 0.5rem;
-}
-
-.bar-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  height: 100%;
-}
-
-.stacked-bar {
-  width: 100%;
-  max-width: 60px;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: stretch;
-  height: 100%;
-  padding-bottom: 2rem;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.stacked-bar:hover {
-  opacity: 0.85;
-}
-
-.bar-segment {
-  width: 100%;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  display: block;
-}
-
-.bar-segment:first-child {
-  border-radius: 0 0 6px 6px;
-}
-
-.bar-segment:last-child {
-  border-radius: 6px 6px 0 0;
-}
-
-.bar-segment.procurement { background: #3b82f6; }
-.bar-segment.operational { background: #8b5cf6; }
-.bar-segment.labor { background: #10b981; }
-.bar-segment.overhead { background: #f59e0b; }
-
-.bar-segment:hover {
-  opacity: 0.8;
-}
-
-.bar-label {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.two-column-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 1.75rem;
-}
-
-.category-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.category-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.category-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.category-name {
-  font-weight: 600;
-  color: #0f172a;
-}
-
-.category-amount {
-  font-weight: 700;
-  color: #2563eb;
-  font-size: 1.125rem;
-}
-
-.category-bar-container {
-  width: 100%;
-  height: 8px;
-  background: #f1f5f9;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.category-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
-  border-radius: 4px;
-  transition: width 0.6s ease;
-}
-
-.category-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.813rem;
-}
-
-.percentage {
-  color: #64748b;
-}
-
-.change {
-  font-weight: 600;
-}
-
-.change.positive {
-  color: #059669;
-}
-
-.change.negative {
-  color: #dc2626;
-}
-
-.transactions-card {
-  display: flex;
-  flex-direction: column;
-}
-
-.transactions-table-container {
-  overflow-y: auto;
-  max-height: 400px;
-}
-
-.transactions-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.transactions-table thead {
-  position: sticky;
-  top: 0;
-  background: #f8fafc;
-  z-index: 1;
-}
-
-.transactions-table th {
-  text-align: left;
-  padding: 0.625rem 0.75rem;
-  font-weight: 600;
-  color: #475569;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.transactions-table th.text-right {
-  text-align: right;
-}
-
-.transactions-table td {
-  padding: 0.75rem 0.75rem;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.875rem;
-}
-
-.transactions-table tbody tr {
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.transactions-table tbody tr:hover {
-  background: #f8fafc;
-}
-
-.transactions-table tbody tr.clickable-row:hover {
-  background: #eff6ff;
-}
-
-.transaction-id {
-  color: #64748b;
-  font-weight: 500;
-  font-family: 'Monaco', 'Courier New', monospace;
-  font-size: 0.813rem;
-}
-
-.transaction-description {
-  color: #0f172a;
-  font-weight: 500;
-}
-
-.transaction-vendor {
-  color: #64748b;
-}
-
-.transaction-date {
-  color: #64748b;
-  font-size: 0.813rem;
-}
-
-.transaction-amount {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.text-right {
-  text-align: right;
-}
+/* Stacked bar segment colors — cannot use Tailwind bg-* on dynamic segments
+   because the stacked bar uses flex-col-reverse which requires precise color assignment */
+.bar-segment-procurement { background: #6366f1; }
+.bar-segment-operational { background: #8b5cf6; }
+.bar-segment-labor      { background: #10b981; }
+.bar-segment-overhead   { background: #f59e0b; }
 </style>

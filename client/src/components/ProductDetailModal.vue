@@ -1,83 +1,72 @@
 <template>
   <Teleport to="body">
     <Transition name="modal">
-      <div v-if="isOpen && product" class="modal-overlay" @click="close">
-        <div class="modal-container" @click.stop>
-          <div class="modal-header">
-            <h3 class="modal-title">Product Details</h3>
-            <button class="close-button" @click="close">
+      <div v-if="isOpen && product" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="close">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col" @click.stop>
+          <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h3 class="text-lg font-semibold text-slate-900">Product Details</h3>
+            <button type="button" class="rounded-lg p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors" @click="close">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </button>
           </div>
 
-          <div class="modal-body">
-            <div class="product-header">
-              <div class="product-icon">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <div class="px-6 py-4 overflow-y-auto flex-1">
+            <!-- Product Header -->
+            <div class="flex items-center gap-4 pb-4 border-b border-slate-100 mb-5">
+              <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center text-white flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
                   <rect x="8" y="12" width="32" height="28" rx="2" stroke="currentColor" stroke-width="2.5"/>
                   <path d="M16 8V16M32 8V16M8 20H40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
                 </svg>
               </div>
-              <div class="product-title-section">
-                <h4 class="product-name">{{ product.name }}</h4>
-                <div class="product-sku">SKU: {{ product.sku }}</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xl font-bold text-slate-900 mb-1">{{ product.name }}</h4>
+                <div class="text-sm text-slate-500 font-mono">SKU: {{ product.sku }}</div>
               </div>
-              <span class="stock-badge" :class="getStockBadgeClass(product.stockLevel)">
-                {{ product.stockLevel }}
-              </span>
+              <span :class="['badge', getStockBadgeClass(product.stockLevel)]">{{ product.stockLevel }}</span>
             </div>
 
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="info-label">Category</div>
-                <div class="info-value">{{ product.category }}</div>
+            <!-- Info Grid -->
+            <div class="grid grid-cols-2 gap-x-6 gap-y-3">
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Category</div>
+                <div class="text-sm font-medium text-slate-900">{{ product.category }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Warehouse</div>
-                <div class="info-value">{{ product.warehouse }}</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Warehouse</div>
+                <div class="text-sm font-medium text-slate-900">{{ product.warehouse }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Units Ordered</div>
-                <div class="info-value">{{ product.unitsOrdered }}</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Units Ordered</div>
+                <div class="text-sm font-medium text-slate-900">{{ product.unitsOrdered }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Total Revenue</div>
-                <div class="info-value">{{ currencySymbol }}{{ product.revenue.toLocaleString() }}</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Revenue</div>
+                <div class="text-sm font-medium text-slate-900">{{ currencySymbol }}{{ product.revenue.toLocaleString() }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Current Stock</div>
-                <div class="info-value">{{ product.quantityOnHand }} units</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Current Stock</div>
+                <div class="text-sm font-medium text-slate-900">{{ product.quantityOnHand }} units</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Reorder Point</div>
-                <div class="info-value">{{ product.reorderPoint }} units</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Reorder Point</div>
+                <div class="text-sm font-medium text-slate-900">{{ product.reorderPoint }} units</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">First Order Date</div>
-                <div class="info-value">{{ formatDate(product.firstOrderDate) }}</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">First Order Date</div>
+                <div class="text-sm font-medium text-slate-900">{{ formatDate(product.firstOrderDate) }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Stock Status</div>
-                <div class="info-value">
-                  <span :class="['badge', getStockBadgeClass(product.stockLevel)]">
-                    {{ product.stockLevel }}
-                  </span>
-                </div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Stock Status</div>
+                <div><span :class="['badge', getStockBadgeClass(product.stockLevel)]">{{ product.stockLevel }}</span></div>
               </div>
             </div>
           </div>
 
-          <div class="modal-footer">
-            <button class="btn-secondary" @click="close">Close</button>
+          <div class="flex justify-end gap-3 px-6 py-4 border-t border-slate-100">
+            <button class="border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-lg px-4 py-2 text-sm font-medium transition-colors" @click="close">Close</button>
           </div>
         </div>
       </div>
@@ -131,205 +120,6 @@ const getStockBadgeClass = (stockLevel) => {
 </script>
 
 <style scoped>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: 1rem;
-}
-
-.modal-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  max-width: 700px;
-  width: 100%;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.15s ease;
-}
-
-.close-button:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
-
-.modal-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 2rem;
-}
-
-.product-header {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 2rem;
-}
-
-.product-icon {
-  width: 64px;
-  height: 64px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-}
-
-.product-title-section {
-  flex: 1;
-  min-width: 0;
-}
-
-.product-name {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 0.5rem 0;
-}
-
-.product-sku {
-  font-size: 0.875rem;
-  color: #64748b;
-  font-family: 'Monaco', 'Courier New', monospace;
-}
-
-.stock-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  flex-shrink: 0;
-}
-
-.stock-badge.success {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.stock-badge.warning {
-  background: #fed7aa;
-  color: #92400e;
-}
-
-.stock-badge.danger {
-  background: #fecaca;
-  color: #991b1b;
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.info-label {
-  font-size: 0.813rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-}
-
-.info-value {
-  font-size: 0.938rem;
-  color: #0f172a;
-  font-weight: 500;
-}
-
-.modal-footer {
-  padding: 1.5rem;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.btn-secondary {
-  padding: 0.625rem 1.25rem;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  color: #334155;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.btn-secondary:hover {
-  background: #e2e8f0;
-  border-color: #cbd5e1;
-}
-
-/* Modal transition animations */
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-active .modal-container,
-.modal-leave-active .modal-container {
-  transition: transform 0.2s ease;
-}
-
-.modal-enter-from .modal-container,
-.modal-leave-to .modal-container {
-  transform: scale(0.95);
-}
+.modal-enter-active, .modal-leave-active { transition: all 0.2s ease; }
+.modal-enter-from, .modal-leave-to { opacity: 0; transform: scale(0.95); }
 </style>

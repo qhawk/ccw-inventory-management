@@ -1,82 +1,76 @@
 <template>
   <Teleport to="body">
     <Transition name="modal">
-      <div v-if="isOpen && backlogItem" class="modal-overlay" @click="close">
-        <div class="modal-container" @click.stop>
-          <div class="modal-header">
-            <h3 class="modal-title">Inventory Shortage Details</h3>
-            <button class="close-button" @click="close">
+      <div v-if="isOpen && backlogItem" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="close">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col" @click.stop>
+          <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h3 class="text-lg font-semibold text-slate-900">Inventory Shortage Details</h3>
+            <button type="button" class="rounded-lg p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors" @click="close">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </button>
           </div>
 
-          <div class="modal-body">
-            <div class="shortage-header">
-              <div class="shortage-icon">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <div class="px-6 py-4 overflow-y-auto flex-1">
+            <!-- Shortage Header -->
+            <div class="flex items-center gap-4 pb-4 border-b border-slate-100 mb-4">
+              <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center text-white flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
                   <path d="M24 8L24 28M24 34L24 36" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
                   <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <div class="shortage-title-section">
-                <h4 class="item-name">{{ translateProductName(backlogItem.item_name) }}</h4>
-                <div class="item-sku">SKU: {{ backlogItem.item_sku }}</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xl font-bold text-slate-900 mb-1">{{ translateProductName(backlogItem.item_name) }}</h4>
+                <div class="text-sm text-slate-500 font-mono">SKU: {{ backlogItem.item_sku }}</div>
               </div>
-              <span class="priority-badge" :class="backlogItem.priority">
-                {{ backlogItem.priority }} Priority
-              </span>
+              <span :class="['badge', backlogItem.priority]">{{ backlogItem.priority }} Priority</span>
             </div>
 
-            <div class="shortage-summary">
-              <div class="summary-card danger">
-                <div class="summary-label">Shortage Amount</div>
-                <div class="summary-value">{{ shortage }} units</div>
+            <!-- Shortage Summary -->
+            <div class="grid grid-cols-2 gap-3 mb-5">
+              <div class="p-4 rounded-xl border-2 border-red-200 bg-red-50">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Shortage Amount</div>
+                <div class="text-2xl font-bold text-red-600">{{ shortage }} <span class="text-sm font-medium">units</span></div>
               </div>
-              <div class="summary-card warning">
-                <div class="summary-label">Days Delayed</div>
-                <div class="summary-value">{{ backlogItem.days_delayed }} days</div>
+              <div class="p-4 rounded-xl border-2 border-amber-200 bg-amber-50">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Days Delayed</div>
+                <div class="text-2xl font-bold text-amber-500">{{ backlogItem.days_delayed }} <span class="text-sm font-medium">days</span></div>
               </div>
             </div>
 
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="info-label">Order ID</div>
-                <div class="info-value order-id">{{ backlogItem.order_id }}</div>
+            <!-- Info Grid -->
+            <div class="grid grid-cols-2 gap-x-6 gap-y-3">
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Order ID</div>
+                <div class="text-sm font-medium text-indigo-600 font-mono">{{ backlogItem.order_id }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Item SKU</div>
-                <div class="info-value sku">{{ backlogItem.item_sku }}</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Item SKU</div>
+                <div class="text-sm font-medium text-indigo-600 font-mono">{{ backlogItem.item_sku }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Quantity Needed</div>
-                <div class="info-value">{{ backlogItem.quantity_needed }} units</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Quantity Needed</div>
+                <div class="text-sm font-medium text-slate-900">{{ backlogItem.quantity_needed }} units</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Quantity Available</div>
-                <div class="info-value">{{ backlogItem.quantity_available }} units</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Quantity Available</div>
+                <div class="text-sm font-medium text-slate-900">{{ backlogItem.quantity_available }} units</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Expected Date</div>
-                <div class="info-value">{{ formatDate(backlogItem.expected_date) }}</div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Expected Date</div>
+                <div class="text-sm font-medium text-slate-900">{{ formatDate(backlogItem.expected_date) }}</div>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">Status</div>
-                <div class="info-value">
-                  <span class="badge danger">Backordered</span>
-                </div>
+              <div class="flex flex-col gap-1">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Status</div>
+                <div><span class="badge danger">Backordered</span></div>
               </div>
             </div>
           </div>
 
-          <div class="modal-footer">
-            <button class="btn-secondary" @click="close">Close</button>
+          <div class="flex justify-end gap-3 px-6 py-4 border-t border-slate-100">
+            <button class="border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-lg px-4 py-2 text-sm font-medium transition-colors" @click="close">Close</button>
           </div>
         </div>
       </div>
@@ -124,257 +118,6 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: 1rem;
-}
-
-.modal-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  max-width: 700px;
-  width: 100%;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.15s ease;
-}
-
-.close-button:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
-
-.modal-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 2rem;
-}
-
-.shortage-header {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 1.5rem;
-}
-
-.shortage-icon {
-  width: 64px;
-  height: 64px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-}
-
-.shortage-title-section {
-  flex: 1;
-  min-width: 0;
-}
-
-.item-name {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 0.5rem 0;
-}
-
-.item-sku {
-  font-size: 0.875rem;
-  color: #64748b;
-  font-family: 'Monaco', 'Courier New', monospace;
-}
-
-.priority-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  flex-shrink: 0;
-}
-
-.priority-badge.high {
-  background: #fecaca;
-  color: #991b1b;
-}
-
-.priority-badge.medium {
-  background: #fed7aa;
-  color: #92400e;
-}
-
-.priority-badge.low {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.shortage-summary {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.summary-card {
-  padding: 1.25rem;
-  border-radius: 10px;
-  border: 2px solid;
-}
-
-.summary-card.danger {
-  border-color: #fecaca;
-  background: #fef2f2;
-}
-
-.summary-card.warning {
-  border-color: #fed7aa;
-  background: #fffbeb;
-}
-
-.summary-label {
-  font-size: 0.813rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-  margin-bottom: 0.5rem;
-}
-
-.summary-value {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.summary-card.danger .summary-value {
-  color: #dc2626;
-}
-
-.summary-card.warning .summary-value {
-  color: #f59e0b;
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.info-label {
-  font-size: 0.813rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-}
-
-.info-value {
-  font-size: 0.938rem;
-  color: #0f172a;
-  font-weight: 500;
-}
-
-.info-value.order-id,
-.info-value.sku {
-  font-family: 'Monaco', 'Courier New', monospace;
-  color: #2563eb;
-}
-
-.modal-footer {
-  padding: 1.5rem;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.btn-secondary {
-  padding: 0.625rem 1.25rem;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  color: #334155;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.btn-secondary:hover {
-  background: #e2e8f0;
-  border-color: #cbd5e1;
-}
-
-/* Modal transition animations */
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-active .modal-container,
-.modal-leave-active .modal-container {
-  transition: transform 0.2s ease;
-}
-
-.modal-enter-from .modal-container,
-.modal-leave-to .modal-container {
-  transform: scale(0.95);
-}
+.modal-enter-active, .modal-leave-active { transition: all 0.2s ease; }
+.modal-enter-from, .modal-leave-to { opacity: 0; transform: scale(0.95); }
 </style>

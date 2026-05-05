@@ -54,7 +54,7 @@
           </div>
 
           <div class="flex justify-end gap-3 px-6 py-4 border-t border-slate-100">
-            <button class="border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-lg px-4 py-2 text-sm font-medium transition-colors" @click="close">{{ t('profileDetails.close') }}</button>
+            <button type="button" class="border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-lg px-4 py-2 text-sm font-medium transition-colors" @click="close">{{ t('profileDetails.close') }}</button>
           </div>
         </div>
       </div>

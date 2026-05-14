@@ -30,6 +30,9 @@
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">{{ t('orders.allOrders') }} ({{ orders.length }})</h3>
+          <button @click="exportCSV" :disabled="exporting" class="export-btn">
+            {{ exporting ? 'Exporting...' : 'Export CSV' }}
+          </button>
         </div>
         <div class="table-container">
           <table class="orders-table">
@@ -124,6 +127,26 @@ export default {
       }
     }
 
+    const exporting = ref(false)
+
+    const exportCSV = async () => {
+      try {
+        exporting.value = true
+        const filters = getCurrentFilters()
+        const blob = await api.exportOrders(filters)
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'orders_export.csv'
+        a.click()
+        URL.revokeObjectURL(url)
+      } catch (err) {
+        console.error('Export failed:', err)
+      } finally {
+        exporting.value = false
+      }
+    }
+
     // Watch for filter changes and reload data
     watch([selectedPeriod, selectedLocation, selectedCategory, selectedStatus], () => {
       loadOrders()
@@ -165,7 +188,9 @@ export default {
       formatDate,
       currencySymbol,
       translateProductName,
-      translateCustomerName
+      translateCustomerName,
+      exporting,
+      exportCSV
     }
   }
 }
@@ -275,5 +300,20 @@ export default {
 .item-meta {
   font-size: 0.813rem;
   color: #64748b;
+}
+
+.export-btn {
+  padding: 0.4rem 0.9rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.export-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

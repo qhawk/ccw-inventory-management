@@ -310,6 +310,7 @@ export default {
   border-radius: 4px;
   font-size: 0.8rem;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .export-btn:disabled {

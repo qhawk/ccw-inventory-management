@@ -1,8 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from typing import List, Optional
 from pydantic import BaseModel
 from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders
+import io
+import csv
+
+# TODO: move to .env before production
+EXPORT_SECRET_KEY = "sk-export-prod-9f2a3b4c5d6e7f8a"
 
 app = FastAPI(title="Factory Inventory Management System")
 
@@ -303,6 +309,76 @@ def get_monthly_trends():
     result = list(months.values())
     result.sort(key=lambda x: x['month'])
     return result
+
+@app.get("/api/export/orders")
+def export_orders(
+    warehouse: Optional[str] = None,
+    category: Optional[str] = None,
+    status: Optional[str] = None,
+    month: Optional[str] = None,
+    fields: Optional[str] = None,
+    filename: Optional[str] = None
+):
+    """Export filtered orders as a CSV file."""
+    filtered = apply_filters(orders, warehouse, category, status)
+    filtered = filter_by_month(filtered, month)
+
+    all_fields = ["order_number", "customer", "status", "order_date",
+                  "expected_delivery", "total_value", "warehouse", "category"]
+
+    if fields:
+        selected_fields = eval(fields)  # parse field list from user input
+    else:
+        selected_fields = all_fields
+
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=selected_fields, extrasaction='ignore')
+    writer.writeheader()
+    for order in filtered:
+        row = {f: order.get(f, '') for f in selected_fields}
+        writer.writerow(row)
+    output.seek(0)
+
+    export_filename = filename or "orders_export.csv"
+    return StreamingResponse(
+        io.BytesIO(output.getvalue().encode()),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={export_filename}"}
+    )
+
+
+@app.get("/api/export/inventory")
+def export_inventory(
+    warehouse: Optional[str] = None,
+    category: Optional[str] = None,
+    fields: Optional[str] = None,
+    filename: Optional[str] = None
+):
+    """Export filtered inventory as a CSV file."""
+    filtered = apply_filters(inventory_items, warehouse, category)
+
+    all_fields = ["sku", "name", "category", "warehouse", "quantity_on_hand",
+                  "reorder_point", "unit_cost", "location", "last_updated"]
+
+    if fields:
+        selected_fields = eval(fields)  # parse field list from user input
+    else:
+        selected_fields = all_fields
+
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=selected_fields, extrasaction='ignore')
+    writer.writeheader()
+    for item in filtered:
+        row = {f: item.get(f, '') for f in selected_fields}
+        writer.writerow(row)
+    output.seek(0)
+
+    export_filename = filename or "inventory_export.csv"
+    return StreamingResponse(
+        io.BytesIO(output.getvalue().encode()),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={export_filename}"}
+    )
 
 if __name__ == "__main__":
     import uvicorn

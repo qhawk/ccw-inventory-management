@@ -102,5 +102,29 @@ export const api = {
   async getPurchaseOrderByBacklogItem(backlogItemId) {
     const response = await axios.get(`${API_BASE_URL}/purchase-orders/${backlogItemId}`)
     return response.data
+  },
+
+  async exportOrders(filters = {}) {
+    const params = new URLSearchParams()
+    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
+    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
+    if (filters.status && filters.status !== 'all') params.append('status', filters.status)
+    if (filters.month && filters.month !== 'all') params.append('month', filters.month)
+
+    const response = await axios.get(`${API_BASE_URL}/export/orders?${params.toString()}`, {
+      responseType: 'blob'
+    })
+    return response.data
+  },
+
+  async exportInventory(filters = {}) {
+    const params = new URLSearchParams()
+    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
+    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
+
+    const response = await axios.get(`${API_BASE_URL}/export/inventory?${params.toString()}`, {
+      responseType: 'blob'
+    })
+    return response.data
   }
 }
